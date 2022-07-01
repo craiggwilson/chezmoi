@@ -40,6 +40,15 @@ func (c *Config) promptBoolInitTemplateFunc(field string, args ...bool) bool {
 	}
 }
 
+func (c *Config) promptBoolOnceInitTemplateFunc(m map[string]interface{}, key, field string, args ...bool) bool {
+	if value, ok := m[key]; ok {
+		if boolValue, ok := value.(bool); ok {
+			return boolValue
+		}
+	}
+	return c.promptBoolInitTemplateFunc(field, args...)
+}
+
 func (c *Config) promptIntInitTemplateFunc(field string, args ...int64) int64 {
 	switch len(args) {
 	case 0:
@@ -65,6 +74,15 @@ func (c *Config) promptIntInitTemplateFunc(field string, args ...int64) int64 {
 	}
 }
 
+func (c *Config) promptIntOnceInitTemplateFunc(m map[string]interface{}, key, field string, args ...int64) int64 {
+	if value, ok := m[key]; ok {
+		if intValue, ok := value.(int64); ok {
+			return intValue
+		}
+	}
+	return c.promptIntInitTemplateFunc(field, args...)
+}
+
 func (c *Config) promptStringInitTemplateFunc(prompt string, args ...string) string {
 	switch len(args) {
 	case 0:
@@ -88,6 +106,15 @@ func (c *Config) promptStringInitTemplateFunc(prompt string, args ...string) str
 		err := fmt.Errorf("want 1 or 2 arguments, got %d", len(args)+1)
 		panic(err)
 	}
+}
+
+func (c *Config) promptStringOnceInitTemplateFunc(m map[string]interface{}, key, field string, args ...string) string {
+	if value, ok := m[key]; ok {
+		if stringValue, ok := value.(string); ok {
+			return stringValue
+		}
+	}
+	return c.promptStringInitTemplateFunc(field, args...)
 }
 
 func (c *Config) stdinIsATTYInitTemplateFunc() bool {
